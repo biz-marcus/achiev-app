@@ -6,11 +6,10 @@ interface MarketingLayoutProps {
   children: React.ReactNode;
 }
 
-export default async function MarketingLayout({ children }: MarketingLayoutProps) {
-  return (
-    <div className={cn("relative flex min-h-screen flex-col")}>
-      <Header />
-      <main className="flex-1">{children}</main>
-    </div>
-  );
+export default function MarketingLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <>{children}</>;
 }
