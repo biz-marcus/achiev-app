@@ -1,15 +1,19 @@
 import { hc } from "hono/client";
 import { HTTPException } from "hono/http-exception";
 import type { AppType } from "@repo/api/src";
-import { getToken } from "@/lib/clerk";
 
 export type { InferRequestType, InferResponseType } from "hono/client";
 
 const getBaseUrl = () => {
-  return process.env.NEXT_PUBLIC_API_URL!;
+  if (typeof window === 'undefined') {
+    // Server-side
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3004';
+  }
+  // Client-side
+  return window.location.origin.replace(':3000', ':3004');
 };
 
-export const apiRpc = hc<AppType>("http://localhost:3004");
+export const apiRpc = hc<AppType>(getBaseUrl());
 
 export async function getApiClient() {
   return apiRpc;
