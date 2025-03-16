@@ -28,14 +28,16 @@ app.get("/health", (c) => {
   return c.text("OK");
 });
 
-const routes = app
-  .basePath("/api")
-  .use("*", errorHandler())
-  .route("/webhooks", webhookRoutes)
-  .route("/posts", postRoutes)
-  .route("/ai", aiRoutes);
+// Create a base router with error handling
+const api = app.basePath("/api");
 
-export type AppType = typeof routes;
+// Register all routes
+api.use("*", errorHandler());
+api.route("/webhooks", webhookRoutes);
+api.route("/posts", postRoutes);
+api.route("/ai", aiRoutes);
+
+export type AppType = typeof api;
 
 export default {
   port: 3004,

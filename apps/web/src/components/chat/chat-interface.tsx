@@ -75,12 +75,12 @@ export function ChatInterface() {
     scrollToBottom();
   }, [messages]);
 
-  // Add welcome message on first load
+  // Update the welcome message
   useEffect(() => {
     setMessages([
       { 
         role: "assistant", 
-        content: "Hi, I'm Achiev AI, your career strategist. I can help you articulate your professional achievements, craft compelling resume bullets, and align your experience with job opportunities. How can I assist with your career today?" 
+        content: "Hi! I'm Achiev AI, your career strategist. I'm here to help you explore and articulate your professional journey. Would you like to start by telling me about your current role?" 
       }
     ]);
   }, []);
@@ -106,7 +106,7 @@ export function ChatInterface() {
       });
 
       // Add AI response
-      setMessages((prev) => [...prev, { role: "assistant", content: result.response }]);
+      setMessages((prev) => [...prev, { role: "assistant", content: result.response || '' }]);
     } catch (error) {
       console.error('Error sending message:', error);
       toast.error('Failed to get response from AI. Please try again.');
@@ -120,7 +120,7 @@ export function ChatInterface() {
   };
   
   const handleStarterClick = async (starter: ConversationStarter) => {
-    const message = `Help me with ${starter.title.toLowerCase()}: ${starter.description.toLowerCase()}`;
+    const message = `I'd like help with ${starter.title.toLowerCase()}: ${starter.description.toLowerCase()}`;
     setInput("");
     
     // Add user message
@@ -137,7 +137,7 @@ export function ChatInterface() {
       });
 
       // Add AI response
-      setMessages((prev) => [...prev, { role: "assistant", content: result.response }]);
+      setMessages((prev) => [...prev, { role: "assistant", content: result.response || '' }]);
     } catch (error) {
       console.error('Error sending message:', error);
       toast.error('Failed to get response from AI. Please try again.');
@@ -152,7 +152,7 @@ export function ChatInterface() {
     setMessages([
       { 
         role: "assistant", 
-        content: "Hi, I'm Achiev AI, your career strategist. I can help you articulate your professional achievements, craft compelling resume bullets, and align your experience with job opportunities. How can I assist with your career today?" 
+        content: "Hi! I'm Achiev AI, your career strategist. I'm here to help you explore and articulate your professional journey. Would you like to start by telling me about your current role?" 
       }
     ]);
     setInput("");
@@ -214,7 +214,7 @@ export function ChatInterface() {
                     : "bg-gray-100 text-gray-900"
                 }`}
               >
-                <p className="whitespace-pre-wrap">{message.content}</p>
+                <p className="whitespace-pre-wrap text-base leading-relaxed">{message.content}</p>
               </div>
               {message.role === "user" && (
                 <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center ml-2">
@@ -290,15 +290,15 @@ export function ChatInterface() {
       {/* Input form - Fixed at bottom with padding */}
       <div className="border-t bg-white p-4">
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
-          <div className="flex gap-2 items-end">
+          <div className="relative flex items-center bg-gray-50 rounded-lg shadow-inner">
             <TextareaAutosize
               value={input}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
-              placeholder="Ask about career achievements, resume help, or job alignment..."
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type a message..."
               minRows={1}
               maxRows={5}
-              className="flex-1 px-4 py-3 rounded-lg shadow-inner bg-gray-50 focus:outline-none focus:ring-0 border-0 resize-none"
-              onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+              className="w-full px-4 py-3 pr-12 bg-transparent focus:outline-none resize-none text-gray-900"
+              onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
                   handleSubmit(e);
@@ -307,10 +307,10 @@ export function ChatInterface() {
             />
             <button 
               type="submit" 
-              className="shrink-0 rounded-lg bg-emerald-500 p-3 text-white hover:bg-emerald-600 focus:outline-none"
+              className="absolute right-2 p-2 rounded-lg text-white bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 transition-colors"
               disabled={!input.trim()}
             >
-              <Send className="h-5 w-5" />
+              <Send className="h-4 w-4" />
             </button>
           </div>
         </form>

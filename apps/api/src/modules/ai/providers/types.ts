@@ -6,6 +6,8 @@ export interface ChatMessage {
 export interface CompletionOptions {
   temperature?: number;
   maxTokens?: number;
+  frequencyPenalty?: number;
+  presencePenalty?: number;
 }
 
 export interface ChatOptions extends CompletionOptions {

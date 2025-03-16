@@ -13,12 +13,32 @@ const chatSchema = z.object({
 });
 
 export const aiRoutes = new Hono()
-  .post('/chat', zValidator('json', chatSchema), async (c) => {
-    const { messages } = c.req.valid('json');
+  .post('/chat', async (c) => {
+    console.log('AI chat endpoint hit');
     
-    const response = await aiService.generateChatResponse({ 
-      messages,
-      userId: 'anonymous' // Temporary placeholder since we removed auth
-    });
-    return c.json({ response });
+    try {
+      const body = await c.req.json();
+      console.log('Request body:', body);
+      
+      const { messages } = body;
+      console.log('Processing messages:', messages);
+      
+      const response = await aiService.generateChatResponse({ 
+        messages,
+        userId: 'anonymous' // Temporary placeholder since we removed auth
+      });
+      
+      console.log('AI response generated:', response);
+      
+      return c.json({ 
+        success: true,
+        response 
+      });
+    } catch (error) {
+      console.error('Error in chat endpoint:', error);
+      return c.json({ 
+        success: false, 
+        error: error instanceof Error ? error.message : 'An unknown error occurred'
+      }, 500);
+    }
   }); 
